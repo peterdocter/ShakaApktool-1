@@ -5,7 +5,7 @@ import com.rover12421.shaka.lib.LogHelper;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.jf.baksmali.main;
+import org.jf.baksmali.Main;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.raw.HeaderItem;
@@ -42,13 +42,21 @@ public class DexBackedDexFileAj {
 
     private static final byte[] MAGIC = new byte[]{0x64, 0x65, 0x78, 0x0a, 0x30, 0x33};
 
-    @Around("execution(org.jf.dexlib2.dexbacked.DexBackedDexFile org.jf.dexlib2.dexbacked.DexBackedDexFile.fromInputStream(..))" +
-            "&& args(opcodes, is)")
+    /**
+     * 需要修复！！！
+     * @param joinPoint
+     * @param opcodes
+     * @param is
+     * @return
+     * @throws Throwable
+     */
+//    @Around("execution(org.jf.dexlib2.dexbacked.DexBackedDexFile org.jf.dexlib2.dexbacked.DexBackedDexFile.fromInputStream(..))" +
+//            "&& args(opcodes, is)")
     public DexBackedDexFile fromInputStream(ProceedingJoinPoint joinPoint, Opcodes opcodes, InputStream is)
             throws Throwable {
 
         //如果是反odex,使用原逻辑
-        if (main.getOptions().hasOption("x")) {
+        if (Main.getInstance().getJcommander().getCommands().get("deodex") != null) {
             return (DexBackedDexFile) joinPoint.proceed(joinPoint.getArgs());
         }
 
